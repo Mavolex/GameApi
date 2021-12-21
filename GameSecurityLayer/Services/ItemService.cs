@@ -7,9 +7,9 @@ namespace GameSecurityLayer.Services
 {
     public class ItemService<ItemModel> : IItemService<ItemModel>
     {
-        private readonly IItemRepository<ItemModel> _repository;
+        private readonly IItemRepository _repository;
 
-        public ItemService(IItemRepository<ItemModel> repository)
+        public ItemService(IItemRepository repository)
         {
             _repository = repository;
         }

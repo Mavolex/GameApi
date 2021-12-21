@@ -1,4 +1,5 @@
-﻿using GameApi.Models.Player;
+﻿using AutoMapper;
+using GameApi.Models.Player;
 using GameSecurityLayer.Models.Items;
 using GameSecurityLayer.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,12 @@ namespace GameApi.Controllers
     {
 
         private readonly IItemService<ItemModel> _itemService;
+        private readonly IMapper _mapper;
 
-        public ItemController(IItemService<ItemModel> itemService)
+        public ItemController(IItemService<ItemModel> itemService, IMapper mapper)
         {
             _itemService = itemService;
+            _mapper = mapper;
         }
 
         /// <summary>

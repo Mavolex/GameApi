@@ -1,4 +1,5 @@
-﻿using GameSecurityLayer.Contexts;
+﻿using AutoMapper;
+using GameSecurityLayer.Contexts;
 using GameSecurityLayer.Models.Player;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,24 +7,20 @@ using System.Threading.Tasks;
 
 namespace GameSecurityLayer.Repositories
 {
-    public class PlayerRepository<PlayerModel> : IPlayerRepository<PlayerModel>
+    public class PlayerRepository : IPlayerRepository
     {
         private readonly GameContext _context;
+        private readonly IMapper _mapper;
 
-        public PlayerRepository(GameContext context)
+        public PlayerRepository(GameContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public IEnumerable<PlayerModelDto> GetAllList()
         {
-            return _context.Players.Select(p => new PlayerModelDto()
-            {
-                _id = p._id,
-                Username = p.Username,
-                Email = p.Email,
-                Password = p.Password
-            }).ToList();
+            return _context.Players.Select(p => _mapper.Map<PlayerModel, PlayerModelDto>(p));
         }
 
         public async Task<PlayerModelDto> Get(int Id)
@@ -41,7 +38,7 @@ namespace GameSecurityLayer.Repositories
         public async Task Add(PlayerModelDto model)
         {
 
-            await _context.Players.AddAsync(new Models.Player.PlayerModel()
+            await _context.Players.AddAsync(new PlayerModel()
             {
                 Username = model.Username,
                 Password = model.Password,

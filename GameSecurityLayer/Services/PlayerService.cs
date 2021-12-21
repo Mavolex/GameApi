@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace GameSecurityLayer.Services
 {
-    public class PlayerService<PlayerModel> : IPlayerService<PlayerModel>
+    public class PlayerService : IPlayerService
     {
-        private readonly IPlayerRepository<PlayerModel> _repository;
+        private readonly IPlayerRepository _repository;
 
-        public PlayerService(IPlayerRepository<PlayerModel> repository)
+        public PlayerService(IPlayerRepository repository)
         { 
             _repository = repository;
         }

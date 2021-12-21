@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace GameSecurityLayer.Repositories
 {
-    public interface IItemRepository<ItemModel>
+    public interface IItemRepository
     {
         IEnumerable<ItemModelDto> GetAllList();
         Task<ItemModelDto> Get(int Id);

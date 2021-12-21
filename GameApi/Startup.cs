@@ -1,3 +1,5 @@
+using AutoMapper;
+using GameApi.Mapper;
 using GameSecurityLayer;
 using GameSecurityLayer.Contexts;
 using GameSecurityLayer.Models.Items;
@@ -20,27 +22,28 @@ namespace GameApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private readonly string _policy = "Policy";
+
+        public Microsoft.Extensions.Configuration.IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<GameContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("Game"), b => b.MigrationsAssembly("GameApi"));
                 
             });
                 
-            services.AddTransient<IPlayerRepository<PlayerModel>, PlayerRepository<PlayerModel>>();
-            services.AddTransient<IItemRepository<ItemModel>, ItemRepository<ItemModel>>();
+            services.AddTransient<IPlayerRepository, PlayerRepository>();
+            services.AddTransient<IItemRepository, ItemRepository>();
             services.AddTransient<IInventoryRepository, InventoryRepository>();
-            services.AddTransient<IPlayerService<PlayerModel>, PlayerService<PlayerModel>>();
+            services.AddTransient<IPlayerService, PlayerService>();
             services.AddTransient<IItemService<ItemModel>, ItemService<ItemModel>>();
             services.AddTransient<IInventoryService, InventoryService>();
 
@@ -53,6 +56,26 @@ namespace GameApi
                   c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
               });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: _policy, builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,11 +92,13 @@ namespace GameApi
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors(_policy);
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+            
             app.UseStatusCodePages(Text.Plain, "Status Code Page: {0}");
         }
     }

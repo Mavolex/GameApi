@@ -1,6 +1,7 @@
 ﻿using GameApi.Models.Player;
 using GameSecurityLayer.Models.Player;
 using GameSecurityLayer.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,9 +13,9 @@ namespace GameApi.Controllers
     public class PlayerController : Controller
     {
         
-        private readonly IPlayerService<PlayerModel> _playerService;
+        private readonly IPlayerService _playerService;
 
-        public PlayerController(IPlayerService<PlayerModel> playerService)
+        public PlayerController(IPlayerService playerService)
         {
             _playerService = playerService;
         }

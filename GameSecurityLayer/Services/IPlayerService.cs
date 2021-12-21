@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace GameSecurityLayer.Services
 {
-    public interface IPlayerService<PlayerModel>
+    public interface IPlayerService
     {
         IEnumerable<PlayerModelDto> GetAllList();
         Task<PlayerModelDto> Get(int Id);
