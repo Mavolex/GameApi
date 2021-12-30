@@ -9,5 +9,6 @@ namespace GameSecurityLayer.Services
         IEnumerable<PlayerModelDto> GetAllList();
         Task<PlayerModelDto> Get(int Id);
         Task Add(PlayerModelDto model);
+        Task<PlayerModelDto> Hit(int Id);
     }
 }

@@ -50,7 +50,9 @@ namespace GameApi.Controllers
             {
                 Name = model.Name,
                 Description = model.Description,
-                Rarity = model.Rarity,
+                Image = model.Image,
+                Price = model.Price,
+                Damage = model.Damage,
             });
         }
     }

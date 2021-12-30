@@ -50,5 +50,14 @@ namespace GameApi.Controllers
                 Email = model.Email
             });
         }
+
+        /// <summary>
+        /// Hit
+        /// </summary>
+        [HttpPost("{ID}")]
+        public async Task<PlayerModelDto> Hit(int ID)
+        {
+            return await _playerService.Hit(ID);
+        }
     }
 }

@@ -6,11 +6,13 @@ namespace GameSecurityLayer.Services
 {
     public class InventoryService : IInventoryService
     {
+        private readonly IPlayerRepository _player;
         private readonly IInventoryRepository _repository;
 
-        public InventoryService(IInventoryRepository repository)
+        public InventoryService(IInventoryRepository repository, IPlayerRepository player)
         {
             _repository = repository;
+            _player = player;
         }
 
         public InventoryModel Get(int Id)
@@ -20,7 +22,7 @@ namespace GameSecurityLayer.Services
 
         public async Task AddItem(int playerId, int ItemId, int count)
         {
-            await _repository.AddItem(playerId, ItemId, count);
+            await _repository.AddItem(playerId, ItemId, count, _player);
         }
 
         public async Task RemoveItem(int playerId, int ItemId, int count)

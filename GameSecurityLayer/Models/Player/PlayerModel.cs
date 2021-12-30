@@ -11,7 +11,7 @@ namespace GameSecurityLayer.Models.Player
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
-        public int Health { get; set; }
+        public int Score { get; set; }
 
     }
 }

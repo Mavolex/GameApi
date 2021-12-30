@@ -16,8 +16,13 @@ namespace GameSecurityLayer
             _context = context;
         }
 
-        public async Task AddItem(int playerId, int ItemId, int count)
+        public async Task AddItem(int playerId, int ItemId, int count, IPlayerRepository player)
         {
+            var cost = _context.Items.Where(i => i._id == ItemId).FirstOrDefault().Price * count;
+            if (!player.Withdraw(playerId, cost).Result) 
+            {
+                return;
+            }
             SlotModel model = _context.Slots.Where(s => s.PlayerId == playerId && s.ItemId == ItemId).FirstOrDefault();
             if (model == null)
             {
@@ -77,6 +82,19 @@ namespace GameSecurityLayer
             model.ItemQuantity -= count;
             _context.Slots.Update(model);
             await _context.SaveChangesAsync();
+        }
+
+        public int Damage(int playerId)
+        {
+            var damage = _context.Slots
+                .Where(s => s.PlayerId == playerId)
+                .Join(_context.Items,
+                    slot => slot.ItemId,
+                    item => item._id,
+                    (slot, item) => item.Damage * slot.ItemQuantity)
+                .Sum();
+
+            return damage;
         }
     }
 }
